@@ -3,15 +3,14 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true" @pullingUp="loadMore">
       <home-swiper :banners='banners'/>
       <home-recommend-view  :recommends='recommends'/>
       <home-feature-view/>
-      <tab-control class="tab-control" :titles="titles" @tabClick="tabClick"/>
+      <tab-control :titles="titles" @tabClick="tabClick" ref="tabControl"/>
       <goods-list :goods="showGoods"/>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
-    <div>呵呵</div>
   </div>
 </template>
 
@@ -28,6 +27,7 @@ import Scroll from 'components/common/scroll/Scroll'
 import BackTop from 'components/content/backTop/BackTop'
 
 import { getHomeMutildata, getHomeGoods } from 'network/home'
+import { debounce } from 'common/utils'
 
 export default {
   name: 'Home',
@@ -52,7 +52,8 @@ export default {
         sell: { page: 0, list: [] }
       },
       currentType: 'pop',
-      isShowBackTop: false
+      isShowBackTop: false,
+      tapOffsetTop: 0
     }
   },
   created () {
@@ -63,6 +64,17 @@ export default {
     this.getHomeGoods('new')
     this.getHomeGoods('sell')
   },
+  mounted () {
+    // 图片完成的时间监听
+    const refresh = debounce(this.$refs.scroll.refresh, 50)
+    // 监听item中图片加载完成
+    this.$bus.$on('itemImgLoad', () => {
+      refresh()
+    })
+    // 获取tabControl的tabOffsetTop
+    // 所有的组件都有一个属性 $el: 用于获取组件中的元素
+    console.log(this.$refs.tabControl.$el.offsetTop)
+  },
   computed: {
     showGoods () {
       return this.goods[this.currentType].list
@@ -71,6 +83,7 @@ export default {
   methods: {
     /**
      * 事件监听相关方法
+     *
     */
     tabClick (index) {
       switch (index) {
@@ -92,6 +105,10 @@ export default {
       // console.log(position)
       this.isShowBackTop = -(position.y) > 1000
     },
+    loadMore () {
+      // console.log('111')
+      this.getHomeGoods(this.currentType)
+    },
     /**
      * 网络请求相关方法
     */
@@ -107,6 +124,8 @@ export default {
         // console.log(res)
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page += 1
+        // 上拉加载更多完成
+        this.$refs.scroll.finishPullUp()
       })
     }
   }
@@ -126,11 +145,6 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 9;
-}
-.tab-control {
-  position: sticky;
-  top: 44px;
   z-index: 9;
 }
 .content {
