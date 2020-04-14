@@ -121,24 +121,24 @@ export default {
     // console.log(document.querySelector('.wrapper'))
     // this.scroll = new BScroll('.wrapper',{
     // })
-    },
+  },
   // 组件挂载完成后调用
   mounted () {
-      // console.log(this.$refs.aaa)
-      // console.log(document.querySelector('.wrapper'))
-      this.scroll = new BScroll('.wrapper' , {
-        probeType: 2,
-        pullUpLoad: true
-      })
-      this.scroll.on('scroll', position => {
-        // console.log(position)
-      })
-      this.scroll.on('pullingUp',() => {
-        console.log('上拉加载更多')
-      })
+    // console.log(this.$refs.aaa)
+    // console.log(document.querySelector('.wrapper'))
+    this.scroll = new BScroll('.wrapper', {
+      probeType: 2,
+      pullUpLoad: true
+    })
+    this.scroll.on('scroll', position => {
+      // console.log(position)
+    })
+    this.scroll.on('pullingUp', () => {
+      console.log('上拉加载更多')
+    })
   },
   methods: {
-    btn() {
+    btn () {
       console.log(111)
     }
   }
