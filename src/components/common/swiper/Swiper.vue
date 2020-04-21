@@ -1,16 +1,24 @@
 <template>
-    <div id="hy-swiper">
-      <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
-        <slot></slot>
-      </div>
-      <slot name="indicator">
-      </slot>
-      <div class="indicator">
-        <slot name="indicator" v-if="showIndicator && slideCount>1">
-          <div v-for="(item, index) in slideCount" class="indi-item" :class="{active: index === currentIndex-1}" :key="index"></div>
-        </slot>
-      </div>
+  <div id="hy-swiper">
+    <div class="swiper"
+         @touchstart="touchStart"
+         @touchmove="touchMove"
+         @touchend="touchEnd"
+         ref="swiper">
+      <slot></slot>
     </div>
+    <slot name="indicator">
+    </slot>
+    <div class="indicator">
+      <slot name="indicator"
+            v-if="showIndicator && slideCount>1">
+        <div v-for="(item, index) in slideCount"
+             class="indi-item"
+             :class="{active: index === currentIndex-1}"
+             :key="index"></div>
+      </slot>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -18,11 +26,11 @@ export default {
   name: 'Swiper',
   props: {
     interval: {
-		    type: Number,
+      type: Number,
       default: 3000
     },
     animDuration: {
-		    type: Number,
+      type: Number,
       default: 300
     },
     moveRatio: {
@@ -35,7 +43,7 @@ export default {
     }
   },
   data: function () {
-		  return {
+    return {
       slideCount: 0, // 元素个数
       totalWidth: 0, // swiper的宽度
       swiperStyle: {}, // swiper样式
@@ -53,13 +61,13 @@ export default {
     }, 100)
   },
   methods: {
-		  /**
-       * 定时器操作
-       */
+    /**
+         * 定时器操作
+         */
     startTimer: function () {
-		    this.playTimer = window.setInterval(() => {
-		      this.currentIndex++
-		      this.scrollContent(-this.currentIndex * this.totalWidth)
+      this.playTimer = window.setInterval(() => {
+        this.currentIndex++
+        this.scrollContent(-this.currentIndex * this.totalWidth)
       }, this.interval)
     },
     stopTimer: function () {
@@ -116,9 +124,10 @@ export default {
     /**
        * 操作DOM, 在DOM前后添加Slide
        */
-		  handleDom: function () {
+    handleDom: function () {
       // 1.获取要操作的元素
-      const swiperEl = document.querySelector('.swiper')
+      const swiperEl = this.$refs.swiper
+      // console.log(this.$refs.swiper)
       const slidesEls = swiperEl.getElementsByClassName('slide')
 
       // 2.保存个数
@@ -210,36 +219,36 @@ export default {
 </script>
 
 <style scoped>
-  #hy-swiper {
-    overflow: hidden;
-    position: relative;
-  }
+#hy-swiper {
+  overflow: hidden;
+  position: relative;
+}
 
-  .swiper {
-    display: flex;
-  }
+.swiper {
+  display: flex;
+}
 
-  .indicator {
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    width: 100%;
-    bottom: 8px;
-  }
+.indicator {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  bottom: 8px;
+}
 
-  .indi-item {
-    box-sizing: border-box;
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background-color: #fff;
-    line-height: 8px;
-    text-align: center;
-    font-size: 12px;
-    margin: 0 5px;
-  }
+.indi-item {
+  box-sizing: border-box;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #fff;
+  line-height: 8px;
+  text-align: center;
+  font-size: 12px;
+  margin: 0 5px;
+}
 
-  .indi-item.active {
-    background-color: rgba(212,62,46,1.0);
-  }
+.indi-item.active {
+  background-color: rgba(212, 62, 46, 1);
+}
 </style>

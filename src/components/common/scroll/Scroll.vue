@@ -1,5 +1,6 @@
 <template>
-  <div class="wrapper" ref="wrapper">
+  <div class="wrapper"
+       ref="wrapper">
     <div class="content">
       <slot></slot>
     </div>
@@ -36,6 +37,12 @@ export default {
     refresh () {
       // console.log('-----') // 测试防抖
       return this.scroll && this.scroll.refresh()
+    },
+    getScrollY () {
+      return this.scroll ? this.scroll.y : 0
+    },
+    scrollTo (x, y, time = 300) {
+      return this.scroll && this.scroll.scrollTo(x, y, time)
     }
   },
   mounted () {
@@ -64,5 +71,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
